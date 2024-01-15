@@ -6,3 +6,28 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model Admin {
+  id          Int    @id @default(autoincrement())
+  nome        String
+  sobrenome   String
+  cpf         String
+  codigoAdmin String
+}
+
+model Customer {
+  id        Int     @id @default(autoincrement())
+  nome      String
+  sobrenome String
+  cpf       String
+  endereco  String
+  celular   String?
+}
+
+model Product {
+  id          Int     @id @default(autoincrement())
+  tipoProduto String
+  nome        String
+  preco       Decimal
+  descricao   String
+}

@@ -1,8 +1,13 @@
 export class User {
     constructor(
-        _id: number,
-        _nome: string,
-        _sobrenome: string,
-        _cpf: string,
-    ) { }
+        private _id: number,
+        private _nome: string,
+        private _sobrenome: string,
+        private _cpf: string,
+    ) {
+        this._id = _id;
+        this._nome = _nome;
+        this._sobrenome = _sobrenome;
+        this._cpf = _cpf;
+    }
 }
