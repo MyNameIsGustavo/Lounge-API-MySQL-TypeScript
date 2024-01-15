@@ -1,6 +1,9 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import cors from 'cors';
 import Database from './database/database.config';
+import clienteRotas from './customer/customer.controller';
+import adminRotas from './admin/admin.controller';
+import produtosRotas from './product/product.controller';
 
 const { APP_PORT } = process.env;
 
@@ -12,9 +15,9 @@ app.use(express.json());
 app.use(cors());
 db.connectDatabase();
 
-app.get('/', (req: Request, res: Response) => {
-    res.send("That's all folks. :D");
-})
+app.use('/api', clienteRotas);
+app.use('/api', adminRotas);
+app.use('/api', produtosRotas);
 
 app.listen(APP_PORT, () => {
     console.log("The application is ON!!!");
