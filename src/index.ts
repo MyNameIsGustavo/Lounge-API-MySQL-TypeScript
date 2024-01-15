@@ -1,22 +1,16 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import Database from './database/database.config';
-import { Request, Response } from 'express';
 
-const {
-    DB_HOST,
-    DB_DATABASE,
-    DB_USER,
-    DB_PASSWORD,
-    APP_PORT
-} = process.env;
+const { APP_PORT } = process.env;
 
 const app = express();
+const db = new Database();
+
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json());
 app.use(cors());
-
-new Database(DB_HOST, DB_DATABASE, DB_USER, DB_PASSWORD);
+db.connectDatabase();
 
 app.get('/', (req: Request, res: Response) => {
     res.send("That's all folks. :D");
