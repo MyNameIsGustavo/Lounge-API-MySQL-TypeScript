@@ -1,10 +1,12 @@
 import express, { Request, Response } from "express";
-import { cadastrarCliente, deletarCliente } from "./customer.service";
+import { cadastrarCliente, deletarCliente, listarTodosClientes } from "./customer.service";
 
 const clienteRotas = express.Router();
 
-clienteRotas.get('/cliente', (req: Request, res: Response) => {
+clienteRotas.get('/cliente', async (req: Request, res: Response) => {
+    const todosClientes = await listarTodosClientes();
 
+    res.status(200).json({ message: 'Todos os clientes do sistema.', data: todosClientes });
 });
 
 clienteRotas.post('/cliente', (req: Request, res: Response) => {
@@ -12,10 +14,7 @@ clienteRotas.post('/cliente', (req: Request, res: Response) => {
 
     cadastrarCliente(nome, sobrenome, cpf, endereco, celular);
 
-    res.status(200).json({
-        message: 'Cliente cadastrado com sucesso!',
-        data: req.body
-    })
+    res.status(200).json({ message: 'Cliente cadastrado com sucesso!', data: req.body });
 });
 
 clienteRotas.put('/cliente/:id', (req: Request, res: Response) => {

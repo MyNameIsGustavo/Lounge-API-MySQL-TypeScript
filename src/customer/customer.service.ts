@@ -11,16 +11,23 @@ export async function cadastrarCliente(nome: string, sobrenome: string, cpf: str
 
     } catch (error) {
         console.error('Erro ao cadastrar cliente:', error);
-        throw new Error('Erro interno do servidor');
     }
 }
+
+export async function listarTodosClientes() {
+    try {
+        return await prisma.customer.findMany();
+    } catch (error) {
+        console.log('Erro ao listar todos os clientes:', error);
+    }
+}
+
 
 export async function deletarCliente(id: number) {
     try {
         await prisma.customer.delete({ where: { id: id } });
     }
     catch (error) {
-        console.log('Erro ao cadastrar cliente:', error);
-        throw new Error('Erro interno do servidor');
+        console.log('Erro ao deletar cliente:', error);
     }
 }
