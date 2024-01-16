@@ -14,11 +14,19 @@ export async function cadastrarCliente(nome: string, sobrenome: string, cpf: str
     }
 }
 
-export async function listarTodosClientes() {
+export async function obterTodosClientes() {
     try {
         return await prisma.customer.findMany();
     } catch (error) {
-        console.log('Erro ao listar todos os clientes:', error);
+        console.log('Erro ao obter todos os clientes:', error);
+    }
+}
+
+export async function obterClientePorId(idCliente: number) {
+    try {
+        return await prisma.customer.findUnique({ where: { id: idCliente } })
+    } catch (error) {
+        console.log('Erro ao obter o cliente:', error);
     }
 }
 
