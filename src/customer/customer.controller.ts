@@ -31,7 +31,7 @@ clienteRotas.get('/cliente/:id?', async (req: Request, res: Response) => {
 
         if (isNaN(clienteId))
             return res.status(400).send({ message: 'O ID deve ser numérico.' });
-        else if (clienteId < 0)
+        else if (clienteId <= 0)
             return res.status(400).send({ message: 'O ID deve ser um numero inteiro positivo.' });
     }
 
@@ -40,13 +40,13 @@ clienteRotas.get('/cliente/:id?', async (req: Request, res: Response) => {
             const cliente = await obterClientePorId(clienteId);
 
             if (cliente) {
-                res.status(200).send({ message: 'Cliente encontrado.', data: cliente });
+                return res.status(200).send({ message: 'Cliente encontrado.', data: cliente });
             } else {
-                res.status(404).send({ message: 'Cliente não encontrado.' });
+                return res.status(404).send({ message: 'Cliente não encontrado.' });
             }
         } else {
             const todosClientes = await obterTodosClientes();
-            res.status(200).send({ message: 'Todos os clientes do sistema.', data: todosClientes });
+            return res.status(200).send({ message: 'Todos os clientes do sistema.', data: todosClientes });
         }
     }
     catch (error) {
@@ -62,7 +62,7 @@ clienteRotas.put('/cliente/:id', async (req: Request, res: Response) => {
     if ('id' in dadosCliente)
         delete dadosCliente['id'];
 
-    if (idCliente < 0)
+    if (idCliente <= 0)
         return res.status(400).send({ message: 'O ID deve ser um numero inteiro positivo.' })
 
     if (isNaN(idCliente))
@@ -71,9 +71,9 @@ clienteRotas.put('/cliente/:id', async (req: Request, res: Response) => {
     try {
         const clienteAtualizado = await atualizarCliente(idCliente, dadosCliente);
         if (clienteAtualizado)
-            res.status(200).send({ message: 'Cliente atualizado com sucesso.', data: clienteAtualizado })
+            return res.status(200).send({ message: 'Cliente atualizado com sucesso.', data: clienteAtualizado })
         else
-            res.status(404).send({ message: 'Cliente não encontrado.' })
+            return res.status(404).send({ message: 'Cliente não encontrado.' })
     } catch (error) {
         console.error(error);
     }
@@ -82,7 +82,7 @@ clienteRotas.put('/cliente/:id', async (req: Request, res: Response) => {
 clienteRotas.delete('/cliente/:id', async (req: Request, res: Response) => {
     const idCliente: number = Number(req.params.id);
 
-    if (idCliente < 0)
+    if (idCliente <= 0)
         return res.status(400).send({ message: 'O ID deve ser um numero inteiro positivo.' })
 
     if (isNaN(idCliente))
@@ -91,9 +91,9 @@ clienteRotas.delete('/cliente/:id', async (req: Request, res: Response) => {
     try {
         const clienteDeletado = await deletarCliente(idCliente);
         if (clienteDeletado)
-            res.status(200).send({ message: 'Cliente deletado com sucesso.' });
+            return res.status(200).send({ message: 'Cliente deletado com sucesso.' });
         else
-            res.status(404).send({ message: 'Cliente não encontrado.' });
+            return res.status(404).send({ message: 'Cliente não encontrado.' });
     } catch (error) {
         console.error(error)
     }
