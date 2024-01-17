@@ -7,24 +7,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Admin {
+model admin {
   id          Int    @id @default(autoincrement())
+  user        String
+  senha       String
   nome        String
   sobrenome   String
   cpf         String
   codigoAdmin String
 }
 
-model Customer {
+model customer {
   id        Int     @id @default(autoincrement())
   nome      String
+  senha     String
   sobrenome String
   cpf       String
   endereco  String
   celular   String?
 }
 
-model Product {
+model product {
   id          Int     @id @default(autoincrement())
   tipoProduto String
   nome        String

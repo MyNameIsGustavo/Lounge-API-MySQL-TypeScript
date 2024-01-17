@@ -1,13 +1,20 @@
 import express, { Request, Response } from "express";
+import { cadastrarAdmin } from "./admin.service";
 
 const adminRotas = express.Router();
 
-adminRotas.post('/admin', (req: Request, res: Response) => {
+adminRotas.post('/admin', async (req: Request, res: Response) => {
+    const { nome, sobrenome, cpf, codigoAdmin } = req.body;
 
-    res.status(200).json({
-        message: 'Informações recebidas',
-        data: req.body
-    })
-})
+    if (!nome || !sobrenome || !cpf || !codigoAdmin)
+        return res.status(400).send({ message: 'Os parametros [nome, sobrenome, cpf, codigoAdmin] são obrigatorios.' });
+
+    try {
+        await cadastrarAdmin(nome, sobrenome, cpf, codigoAdmin);
+        return res.status(200).send({ message: 'Admin cadastrado com sucesso!', data: req.body });
+    } catch (error) {
+        console.log(error);
+    }
+});
 
 export default adminRotas;
