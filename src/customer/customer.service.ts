@@ -30,10 +30,9 @@ export async function obterClientePorId(idCliente: number) {
 }
 
 export async function atualizarCliente(idCliente: number, dadosCliente: object) {
+    const existeCliente = await prisma.customer.findUnique({ where: { id: idCliente } })
 
     try {
-        const existeCliente = await prisma.customer.findUnique({ where: { id: idCliente } })
-
         if (existeCliente)
             return await prisma.customer.update({ data: dadosCliente, where: { id: idCliente } });
         else
@@ -45,9 +44,14 @@ export async function atualizarCliente(idCliente: number, dadosCliente: object) 
 }
 
 
-export async function deletarCliente(id: number) {
+export async function deletarCliente(idCliente: number) {
+    const existeCliente = await prisma.customer.findUnique({ where: { id: idCliente } })
+
     try {
-        await prisma.customer.delete({ where: { id: id } });
+        if (existeCliente)
+            return await prisma.customer.delete({ where: { id: idCliente } });
+        else
+            return false;
     }
     catch (error) {
         console.log('Erro ao deletar cliente:', error);

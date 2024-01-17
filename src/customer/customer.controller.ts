@@ -74,14 +74,23 @@ clienteRotas.put('/cliente/:id', async (req: Request, res: Response) => {
 });
 
 clienteRotas.delete('/cliente/:id', async (req: Request, res: Response) => {
-    const id: number = Number(req.params.id);
+    const idCliente: number = Number(req.params.id);
 
-    if (isNaN(id))
-        throw new Error('O ID deve ser numérico');
+    if (idCliente < 0)
+        return res.status(400).send({ message: 'O ID deve ser um numero inteiro positivo.' })
 
-    await deletarCliente(id);
-    res.status(204).send();
+    if (isNaN(idCliente))
+        return res.status(400).send({ message: 'O ID deve ser numérico.' })
 
+    try {
+        const clienteDeletado = await deletarCliente(idCliente);
+        if (clienteDeletado)
+            res.status(200).send({ message: 'Cliente deletado com sucesso.' });
+        else
+            res.status(404).send({ message: 'Cliente não encontrado.' });
+    } catch (error) {
+        console.log(error)
+    }
 });
 
 export default clienteRotas;
