@@ -12,9 +12,15 @@ const clienteRotas = express.Router();
 clienteRotas.post('/cliente', async (req: Request, res: Response) => {
     const { nome, sobrenome, cpf, endereco, celular } = req.body;
 
-    await cadastrarCliente(nome, sobrenome, cpf, endereco, celular);
+    if (!nome || !sobrenome || !cpf || !endereco)
+        return res.status(400).send({ message: 'Os parametros [nome, sobrenome, cpf, endereco] são obrigatorios.' });
 
-    res.status(200).send({ message: 'Cliente cadastrado com sucesso!', data: req.body });
+    try {
+        await cadastrarCliente(nome, sobrenome, cpf, endereco, celular);
+        return res.status(200).send({ message: 'Cliente cadastrado com sucesso!', data: req.body });
+    } catch (error) {
+        console.error(error);
+    }
 });
 
 clienteRotas.get('/cliente/:id?', async (req: Request, res: Response) => {
@@ -44,7 +50,7 @@ clienteRotas.get('/cliente/:id?', async (req: Request, res: Response) => {
         }
     }
     catch (error) {
-        console.log(error)
+        console.error(error)
     }
 });
 
@@ -69,7 +75,7 @@ clienteRotas.put('/cliente/:id', async (req: Request, res: Response) => {
         else
             res.status(404).send({ message: 'Cliente não encontrado.' })
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 });
 
@@ -89,7 +95,7 @@ clienteRotas.delete('/cliente/:id', async (req: Request, res: Response) => {
         else
             res.status(404).send({ message: 'Cliente não encontrado.' });
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 });
 
