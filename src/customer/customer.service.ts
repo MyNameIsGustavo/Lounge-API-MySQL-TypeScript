@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, customer } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -12,7 +12,17 @@ export async function cadastrarCliente(nome: string, senha: string, sobrenome: s
 
 export async function obterTodosClientes() {
     try {
-        return await prisma.customer.findMany();
+        const clientes = await prisma.customer.findMany();
+        let todosClientesSemSenha;
+
+        if (clientes) {
+            todosClientesSemSenha = clientes.map((objeto) => {
+                const { senha, ...objetoSemSenha } = objeto;
+                return objetoSemSenha;
+            });
+        }
+
+        return todosClientesSemSenha;
     } catch (error) {
         console.error('Erro ao obter todos os clientes:', error);
     }
@@ -20,7 +30,13 @@ export async function obterTodosClientes() {
 
 export async function obterClientePorId(idCliente: number) {
     try {
-        return await prisma.customer.findUnique({ where: { id: idCliente } })
+        const cliente = await prisma.customer.findUnique({ where: { id: idCliente } })
+        if (cliente) {
+            const { senha, ...clienteSemSenha } = cliente;
+            return clienteSemSenha;
+        } else {
+            return {};
+        }
     } catch (error) {
         console.error('Erro ao obter o cliente:', error);
     }
