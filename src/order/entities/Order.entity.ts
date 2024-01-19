@@ -5,6 +5,7 @@ export class Order {
         _idCliente: string,
         _dataPedido: Date,
         _cpfCliente: string,
+        _pedidoFinalizado: boolean,
         _enderecoCliente?: string,
     ) { }
 }

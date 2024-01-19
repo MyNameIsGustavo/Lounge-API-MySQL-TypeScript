@@ -2,9 +2,9 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export async function cadastrarCliente(id: number, nome: string, senha: string, sobrenome: string, cpf: string, endereco: string, celular?: string) {
+export async function cadastrarCliente(nome: string, senha: string, sobrenome: string, cpf: string, endereco: string, celular?: string) {
     try {
-        return await prisma.customer.create({ data: { id, nome, senha, sobrenome, cpf, endereco, celular } });
+        return await prisma.customer.create({ data: { nome, senha, sobrenome, cpf, endereco, celular } });
     } catch (error) {
         console.error('Erro ao cadastrar cliente:', error);
     }

@@ -10,13 +10,13 @@ import {
 const clienteRotas = express.Router();
 
 clienteRotas.post('/cliente', async (req: Request, res: Response) => {
-    const { id, nome, senha, sobrenome, cpf, endereco, celular } = req.body;
+    const { nome, senha, sobrenome, cpf, endereco, celular } = req.body;
 
     if (!nome || !senha || !sobrenome || !cpf || !endereco)
         return res.status(400).send({ message: 'Os parametros [nome, senha, sobrenome, cpf, endereco] são obrigatorios.' });
 
     try {
-        await cadastrarCliente(id, nome, senha, sobrenome, cpf, endereco, celular);
+        await cadastrarCliente(nome, senha, sobrenome, cpf, endereco, celular);
         return res.status(200).send({ message: 'Cliente cadastrado com sucesso!', data: req.body });
     } catch (error) {
         console.error(error);
