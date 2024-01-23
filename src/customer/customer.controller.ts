@@ -6,6 +6,7 @@ import {
     deletarCliente,
     atualizarCliente,
 } from "./customer.service";
+import { customer } from "@prisma/client";
 
 const clienteRotas = express.Router();
 
@@ -58,10 +59,7 @@ clienteRotas.get('/cliente/:id?', async (req: Request, res: Response) => {
 
 clienteRotas.put('/cliente/:id', async (req: Request, res: Response) => {
     const idCliente: number = Number(req.params.id);
-    const dadosCliente: object = req.body;
-
-    if ('id' in dadosCliente)
-        delete dadosCliente['id'];
+    const dadosCliente: customer = req.body;
 
     if (idCliente <= 0)
         return res.status(400).send({ message: 'O ID deve ser um numero inteiro positivo.' });
