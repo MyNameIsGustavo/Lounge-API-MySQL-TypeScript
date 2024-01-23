@@ -3,11 +3,11 @@ import { encriptarSenha } from '../utils/bcrypt';
 
 const prisma = new PrismaClient();
 
-export async function cadastrarCliente(nome: string, senhaNaoEncriptada: string, sobrenome: string, cpf: string, endereco: string, celular?: string) {
-    const senha: string = await encriptarSenha(senhaNaoEncriptada);
-
+export async function cadastrarCliente(dadosCliente: customer) {
+    const senhaEncriptada: string = await encriptarSenha(dadosCliente.senha);
+    dadosCliente.senha = senhaEncriptada;
     try {
-        return await prisma.customer.create({ data: { nome, senha, sobrenome, cpf, endereco, celular } });
+        return await prisma.customer.create({ data: dadosCliente });
     } catch (error) {
         console.error('Erro ao cadastrar cliente:', error);
     }

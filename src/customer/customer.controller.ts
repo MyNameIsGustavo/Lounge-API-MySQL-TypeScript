@@ -11,13 +11,13 @@ import { customer } from "@prisma/client";
 const clienteRotas = express.Router();
 
 clienteRotas.post('/cliente', async (req: Request, res: Response) => {
-    const { nome, senha, sobrenome, cpf, endereco, celular } = req.body;
+    const dadosCliente: customer = req.body;
 
-    if (!nome || !senha || !sobrenome || !cpf || !endereco)
+    if (!dadosCliente.nome || !dadosCliente.senha || !dadosCliente.sobrenome || !dadosCliente.cpf || !dadosCliente.endereco)
         return res.status(400).send({ message: 'Os parametros [nome, senha, sobrenome, cpf, endereco] são obrigatorios.' });
 
     try {
-        await cadastrarCliente(nome, senha, sobrenome, cpf, endereco, celular);
+        await cadastrarCliente(dadosCliente);
         return res.status(200).send(req.body);
     } catch (error) {
         console.error(error);
