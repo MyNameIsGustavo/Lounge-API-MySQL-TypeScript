@@ -9,6 +9,7 @@ datasource db {
 
 model admin {
   id          Int    @id @default(autoincrement())
+  typeUser    String 
   user        String
   senha       String
   nome        String
@@ -19,6 +20,7 @@ model admin {
 
 model customer {
   id        Int     @id @default(autoincrement())
+  typeUser  String
   nome      String
   senha     String
   sobrenome String

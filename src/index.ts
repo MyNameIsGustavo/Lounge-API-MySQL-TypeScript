@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import Database from './database/database.config';
+import userRotas from './user/user.controller';
 import clienteRotas from './customer/customer.controller';
 import adminRotas from './admin/admin.controller';
 import produtosRotas from './product/product.controller';
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use(cors());
 db.connectDatabase();
 
+app.use('/api', userRotas);
 app.use('/api', clienteRotas);
 app.use('/api', adminRotas);
 app.use('/api', produtosRotas);

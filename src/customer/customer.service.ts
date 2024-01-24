@@ -1,11 +1,14 @@
 import { PrismaClient, customer } from "@prisma/client";
 import { encriptarSenha } from '../utils/bcrypt';
+import { Roles } from '../user/roles/roles';
 
 const prisma = new PrismaClient();
 
 export async function cadastrarCliente(dadosCliente: customer) {
     const senhaEncriptada: string = await encriptarSenha(dadosCliente.senha);
     dadosCliente.senha = senhaEncriptada;
+    dadosCliente.typeUser = Roles.USER_CUSTOMER;
+
     try {
         return await prisma.customer.create({ data: dadosCliente });
     } catch (error) {
