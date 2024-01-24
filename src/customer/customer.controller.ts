@@ -5,10 +5,39 @@ import {
     obterClientePorId,
     deletarCliente,
     atualizarCliente,
+    verificaRegistro
 } from "./customer.service";
-import { customer } from "@prisma/client";
+import { Login } from "./types/login-type";
+import * as JWT from 'jsonwebtoken';
+const { EXPIRED_TOKEN, SECRETED_KEY } = process.env;
 
 const clienteRotas = express.Router();
+
+clienteRotas.post('/cliente/auth', async (req: Request, res, Response) => {
+    const dadosLogin: Login = req.body;
+
+    try {
+        const ehRegistrado = await verificaRegistro(Login);
+
+        if (ehRegistrado) {
+            const role = ehRegistrado.typeUser;
+
+            const tokenAcesso = JWT.sign({
+                "userInfo": {
+                    "user": ehRegistrado.nome,
+                    "role": role
+                }
+            }, SECRETED_KEY!, { expiresIn: EXPIRED_TOKEN });
+
+            return res.status(200).json({ token: tokenAcesso });
+        } else {
+            return res.status(204).send();
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Erro no servidor" });
+    }
+});
 
 clienteRotas.post('/cliente', async (req: Request, res: Response) => {
     const dadosCliente: customer = req.body;

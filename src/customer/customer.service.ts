@@ -1,15 +1,15 @@
 import { PrismaClient, customer } from "@prisma/client";
-import { encriptarSenha } from '../utils/bcrypt';
+import { encriptarSenha, compararSenha } from '../utils/bcrypt';
 import { Roles } from '../user/roles/roles';
+import { Login } from "./types/login-type";
 
 const prisma = new PrismaClient();
 
 export async function cadastrarCliente(dadosCliente: customer) {
-    const senhaEncriptada: string = await encriptarSenha(dadosCliente.senha);
-    dadosCliente.senha = senhaEncriptada;
-    dadosCliente.typeUser = Roles.USER_CUSTOMER;
-
     try {
+        const senhaEncriptada: string = await encriptarSenha(dadosCliente.senha);
+        dadosCliente.senha = senhaEncriptada;
+        dadosCliente.typeUser = Roles.USER_CUSTOMER;
         return await prisma.customer.create({ data: dadosCliente });
     } catch (error) {
         console.error('Erro ao cadastrar cliente:', error);
@@ -49,9 +49,10 @@ export async function obterClientePorId(idCliente: number) {
 }
 
 export async function atualizarCliente(idCliente: number, dadosCliente: customer) {
-    const existeCliente = await prisma.customer.findUnique({ where: { id: idCliente } })
+
 
     try {
+        const existeCliente = await prisma.customer.findUnique({ where: { id: idCliente } })
         if (existeCliente) {
             const senhaEncriptada: string = await encriptarSenha(dadosCliente.senha);
             dadosCliente.senha = senhaEncriptada;
@@ -72,9 +73,10 @@ export async function atualizarCliente(idCliente: number, dadosCliente: customer
 }
 
 export async function deletarCliente(idCliente: number) {
-    const existeCliente = await prisma.customer.findUnique({ where: { id: idCliente } })
 
     try {
+        const existeCliente = await prisma.customer.findUnique({ where: { id: idCliente } })
+
         if (existeCliente)
             return await prisma.customer.delete({ where: { id: idCliente } });
         else
@@ -82,5 +84,22 @@ export async function deletarCliente(idCliente: number) {
     }
     catch (error) {
         console.error('Erro ao deletar cliente:', error);
+    }
+}
+
+export async function verificaRegistro(dadosLogin: Login) {
+    try {
+        const existeCliente: Login = await prisma.customer.findFirstOrThrow({ where: { nome: dadosLogin.email } });
+
+        if (existeCliente) {
+            if (await compararSenha(dadosLogin.senha, existeCliente.senha))
+                return existeCliente;
+            else
+                return null;
+        }
+        else
+            return null;
+    } catch (error) {
+        console.error(error);
     }
 }
